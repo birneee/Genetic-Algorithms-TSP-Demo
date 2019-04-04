@@ -1,12 +1,17 @@
-# Genetic Algorithm Tech Talk
+# Genetic Algorithm TSP Demo
+Based on the work of Tae-Young Patrick Kim (https://github.com/ptrkkim/Genetic-Algo-Tech-Talk)
 
-Demo for Fullstack Academy tech talk that visualizes solving the Traveling Salesperson Problem with a genetic algorithm.
+## Setup
+```
+npm install
+```
 
-[Watch the talk!](https://www.youtube.com/watch?v=XP8R0yzAbdo) 
+## Update Public JS
+```
+npm run-script postinstall
+```
 
-## The algorithm
-
-Check out population.js and individual.js for the bulk of the algorithm.
-The front-end ticking + drawing logic gets a little hairy but check out index.js + utils.js if you would like to.
-
-Check out notes.txt for a few example configurations (I recommend keeping mutation very low)!
+## Run Server
+```
+node app.js
+```

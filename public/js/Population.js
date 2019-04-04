@@ -2,11 +2,12 @@ import Individual from './individual';
 
 // create new Population of size x
 // this population's initial pop is an array with shuffled versions of seed
-export default function Population (size, seed, pC, pM) {
+export default function Population (size, seed, pC, pM, kDirect) {
   this.currentPop = this.generate(size, seed);
   this.currentFitnesses = this.currentPop.map(individual => individual.getFitness());
   this.probCross = pC;
   this.probMuta = pM;
+  this.kDirect = kDirect;
   this.genNumber = 0;
   this.fittestEver = this.getFittest();
 }
@@ -22,6 +23,10 @@ Population.prototype.generate = function (size, seed) {
 Population.prototype.nextGen = function () {
   let evolvedPop = [];
 
+  if(this.kDirect) {
+    evolvedPop.push(this.getFittest())
+  }
+
   while (evolvedPop.length < this.currentPop.length) {
     evolvedPop = [...evolvedPop, ...this.haveTwoChildren()];
   }
@@ -31,6 +36,13 @@ Population.prototype.nextGen = function () {
   this.currentFitnesses = evolvedPop.map(individual => individual.getFitness());
 
   return this;
+};
+
+Population.prototype.countUnique = function(){
+  return this.currentPop
+      .map((individual) => individual.hashDna())
+      .unique()
+      .length
 };
 
 // from current population, roulette select 2 parents (indivs), create 2 Individuals
@@ -82,6 +94,16 @@ Population.prototype.getFittest = function () {
   return this.currentPop[fittestIndex];
 };
 
+// returns weakest individual
+Population.prototype.getWeakest = function () {
+  const fittestIndex = this.currentFitnesses.reduce((weakestInd, currentScore, i, scores) => {
+    if (currentScore < scores[weakestInd]) return i;
+    return weakestInd;
+  }, 0);
+
+  return this.currentPop[fittestIndex];
+};
+
 // due to genome being a route, should exchange segments while maintaining order
 // read into 'ordered crossover'
 export function orderedCross (startInd, endInd, segParent, otherParent) {
@@ -125,4 +147,14 @@ export function fisherSwap(array, index) {
   const temp = array[index];
   array[index] = array[rand];
   array[rand] = temp;
+}
+
+Array.prototype.unique = function() {
+  var arr = [];
+  for(var i = 0; i < this.length; i++) {
+    if(!arr.includes(this[i])) {
+      arr.push(this[i]);
+    }
+  }
+  return arr;
 }

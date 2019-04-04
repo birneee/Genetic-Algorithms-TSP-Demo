@@ -28,6 +28,12 @@ Individual.prototype.mutate = function (probMutate) {
   return new Individual(mutatedRoute);
 };
 
+Individual.prototype.hashDna = function(){
+  return this.dna
+      .map((gen, index) => index * gen.x * gen.y)
+      .reduce((sum, a) => sum + a)
+};
+
 Individual.prototype.getFitness = function () {
   return 1 / getDistance(this.dna); 
 };

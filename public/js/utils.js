@@ -46,7 +46,8 @@ export const clearAnalytics = () => {
   const shortestNow = document.getElementById('shortestNow');
   const fittestGens = document.getElementById('fittestGens');
   const shortestEver = document.getElementById('shortestEver');
-  const analytics = [genNumber, shortestNow, fittestGens, shortestEver];
+  const uniqueIndividuals  = document.getElementById('uniqueIndividuals');
+  const analytics = [genNumber, shortestNow, fittestGens, shortestEver, uniqueIndividuals];
 
   analytics.forEach(resetNumber);
 };
@@ -65,11 +66,13 @@ export const getCanvasesAndContexts = () => {
   const gCanvas = document.getElementById('genetic');
   const fCanvas = document.getElementById('fitness');
   const bCanvas = document.getElementById('best');
+  const wCanvas = document.getElementById('weakness');
   const gCtx    = gCanvas.getContext('2d');
   const fCtx    = fCanvas.getContext('2d');
   const bCtx    = bCanvas.getContext('2d');
+  const wCtx    = wCanvas.getContext('2d');
 
-  return { gCanvas, gCtx, fCanvas, fCtx, bCanvas, bCtx };
+  return { gCanvas, gCtx, fCanvas, fCtx, bCanvas, bCtx, wCanvas, wCtx };
 };
 
 export const fitRouteToCanvas = (seedArray, canvasString) => {
@@ -100,9 +103,10 @@ export const fitRouteToCanvas = (seedArray, canvasString) => {
 // so that canvas activity only represents 1 population at a time
 // buttons use tick to step/play/pause/reset
 export const makeTicker = (population) => {
-  const { gCanvas, gCtx, fCtx, bCanvas, bCtx } = getCanvasesAndContexts();
+  const { gCanvas, gCtx, fCtx, bCanvas, bCtx, wCanvas, wCtx } = getCanvasesAndContexts();
   const analyticGenNum = document.getElementById('genNumber');
   const shortestNow  = document.getElementById('shortestNow');
+  const uniqueIndividuals  = document.getElementById('uniqueIndividuals');
 
   return function tick () {
     population.nextGen();
@@ -111,7 +115,10 @@ export const makeTicker = (population) => {
     // ++
 
     const fittest = population.getFittest();
+    const weakest = population.getWeakest();
     shortestNow.innerHTML = Math.floor(1 / fittest.getFitness());
+
+    uniqueIndividuals.innerHTML = population.countUnique();
 
     if (fittest.getFitness() > population.fittestEver.getFitness()) {
       population.fittestEver = fittest;
@@ -121,6 +128,7 @@ export const makeTicker = (population) => {
     clearCanvas(gCanvas);
     fittest.draw(gCtx);
     drawFitness(fCtx, population.genNumber, fittest.getFitness());
+    drawFitness(wCtx, population.genNumber, weakest.getFitness());
   };
 };
 

@@ -33,13 +33,20 @@
           <span>Shortest distance ever: </span>
           <output id="shortestEver">0</output>
         </div>
+        <div>
+          <span>Unique Individuals: </span>
+          <output id="uniqueIndividuals">0</output>
+        </div>
       </div>
 
       <canvas id="best" width="250" height="250" style="border:1px solid #d3d3d3;"></canvas> 
 
-      <div style="width: 750px; overflow: scroll">
+      <div style="width: 750px; height: 300px; overflow-x: scroll; overflow-y: hidden; border:1px solid #d3d3d3; position: relative">
         <canvas id="fitness" width="10000" height="300"
-        style="border:1px solid #d3d3d3;">
+        style="position: absolute; top: 0">
+        </canvas>
+        <canvas id="weakness" width="10000" height="300"
+                style="position: absolute; top: 0;     opacity: 0.4;">
         </canvas>
       </div>
     </div>
@@ -50,8 +57,9 @@
       <button id="reset">Clear and Reset</button>
       <button id="step">Step</button>
       <button id="config">DEFAULT CONFIG</button>
+      <button id="changeMap">Change Map</button>
     </div>
-    <div style="display: inline-block; width: 600px">
+    <div style="display: inline-block; width: 800px">
       <div>
         <span>Step Interval (ms)</span>
         <input type="range" id="intervalIn" max="500" step="10">
@@ -67,8 +75,12 @@
         <output id="pCrossOut"></output>
       <div>
         <span>Mutation Chance</span>
-        <input type="range" id="pMutateIn" max="1" step=".01">
+        <input type="range" style="    width: 400px;" id="pMutateIn" max=".02" step="0.000002">
         <output id="pMutateOut"></output>
+      </div>
+      <div>
+        <span>Directly Take Fittest</span>
+        <input type="checkbox" id="kDirectIn">
       </div>
     </div>
 
